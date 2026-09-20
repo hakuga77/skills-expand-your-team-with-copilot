@@ -68,7 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initializeTheme() {
     const savedTheme = localStorage.getItem("theme");
-    setTheme(savedTheme === "dark");
+    const prefersDarkMode =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (savedTheme === "dark" || savedTheme === "light") {
+      setTheme(savedTheme === "dark");
+    } else {
+      setTheme(prefersDarkMode);
+    }
   }
 
   // Time range mappings for the dropdown
