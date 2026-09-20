@@ -44,6 +44,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+  let themePreferenceMemory = null;
+
+  function getStoredTheme() {
+    try {
+      return localStorage.getItem("theme");
+    } catch (error) {
+      return themePreferenceMemory;
+    }
+  }
+
+  function storeTheme(theme) {
+    themePreferenceMemory = theme;
+    try {
+      localStorage.setItem("theme", theme);
+    } catch (error) {
+      // Keep in-memory fallback when localStorage is unavailable
+    }
+  }
 
   function updateThemeToggleButton(isDarkMode) {
     const themeIcon = themeToggleButton.querySelector(".theme-icon");
@@ -62,12 +80,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setTheme(isDarkMode) {
     document.body.classList.toggle("dark-mode", isDarkMode);
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+    storeTheme(isDarkMode ? "dark" : "light");
     updateThemeToggleButton(isDarkMode);
   }
 
   function initializeTheme() {
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = getStoredTheme();
     const prefersDarkMode =
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches;
