@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sharedActivity = new URLSearchParams(window.location.search).get(
       "activity"
     );
-    if (sharedActivity) {
+    if (sharedActivity && !searchInput.value.trim()) {
       searchQuery = sharedActivity;
       searchInput.value = sharedActivity;
     }
@@ -649,17 +649,8 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
-      <div class="social-share-actions">
+      <div class="social-share-actions" data-share-controls>
         <span class="share-label">Share:</span>
-        <button type="button" class="share-button" data-platform="native" data-activity="${name}" aria-label="Share ${name}">
-          Share
-        </button>
-        <button type="button" class="share-button" data-platform="whatsapp" data-activity="${name}" aria-label="Share ${name} on WhatsApp">
-          WhatsApp
-        </button>
-        <button type="button" class="share-button" data-platform="facebook" data-activity="${name}" aria-label="Share ${name} on Facebook">
-          Facebook
-        </button>
       </div>
     `;
 
@@ -679,11 +670,32 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    const shareButtons = activityCard.querySelectorAll(".share-button");
-    shareButtons.forEach((button) => {
+    const shareControls = activityCard.querySelector("[data-share-controls]");
+    const shareOptions = [
+      { platform: "native", label: "Share", ariaLabel: `Share ${name}` },
+      {
+        platform: "whatsapp",
+        label: "WhatsApp",
+        ariaLabel: `Share ${name} on WhatsApp`,
+      },
+      {
+        platform: "facebook",
+        label: "Facebook",
+        ariaLabel: `Share ${name} on Facebook`,
+      },
+    ];
+
+    shareOptions.forEach(({ platform, label, ariaLabel }) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "share-button";
+      button.dataset.platform = platform;
+      button.setAttribute("aria-label", ariaLabel);
+      button.textContent = label;
       button.addEventListener("click", async () => {
-        await shareActivity(button.dataset.platform, name, formattedSchedule);
+        await shareActivity(platform, name, formattedSchedule);
       });
+      shareControls.appendChild(button);
     });
 
     activitiesList.appendChild(activityCard);
