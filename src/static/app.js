@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
-  let currentDifficulty = "";
+  let currentDifficulty = "none";
 
   // Authentication state
   let currentUser = null;
@@ -460,13 +460,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Apply difficulty filter
       const difficultyLevel = getActivityDifficulty(details);
-      if (currentDifficulty) {
+      if (currentDifficulty === "none") {
+        // "No Level" means activities with no difficulty level specified
+        if (difficultyLevel) {
+          return;
+        }
+      } else if (currentDifficulty) {
         if (difficultyLevel !== currentDifficulty) {
           return;
         }
-      } else if (difficultyLevel) {
-        // "All" means activities with no difficulty level specified
-        return;
       }
 
       // Apply search filter
