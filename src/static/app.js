@@ -68,9 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const sharedActivity = new URLSearchParams(window.location.search).get(
       "activity"
     );
-    if (sharedActivity && !searchInput.value.trim()) {
-      searchQuery = sharedActivity;
-      searchInput.value = sharedActivity;
+    const normalizedSharedActivity = sharedActivity ? sharedActivity.trim() : "";
+    if (normalizedSharedActivity && !searchInput.value.trim()) {
+      searchQuery = normalizedSharedActivity;
+      searchInput.value = normalizedSharedActivity;
     }
   }
 
@@ -313,9 +314,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildShareInfo(name, formattedSchedule) {
-    const shareUrl = `${window.location.origin}${
-      window.location.pathname
-    }?activity=${encodeURIComponent(name)}`;
+    const normalizedName = name.trim();
+    const shareUrlObject = new URL(window.location.href);
+    shareUrlObject.searchParams.set("activity", normalizedName);
+    const shareUrl = shareUrlObject.toString();
     const shareText = `Check out ${name} at Mergington High School! Schedule: ${formattedSchedule}`;
     return { shareUrl, shareText };
   }
