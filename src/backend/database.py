@@ -122,11 +122,11 @@ initial_activities = {
     },
     "Manga Club": {
         "description": "Explore fantastic stories from the most interesting characters in Japanese manga (graphic novels)",
-        "schedule": "Tuesdays, 7:00 PM",
+        "schedule": "Tuesdays, 7:00 PM - 8:00 PM",
         "schedule_details": {
             "days": ["Tuesday"],
             "start_time": "19:00",
-            "end_time": "19:00"
+            "end_time": "20:00"
         },
         "max_participants": 15,
         "participants": []
