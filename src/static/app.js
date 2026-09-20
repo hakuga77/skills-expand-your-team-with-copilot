@@ -64,6 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeTimeFilter) {
       currentTimeRange = activeTimeFilter.dataset.time;
     }
+
+    const sharedActivity = new URLSearchParams(window.location.search).get(
+      "activity"
+    );
+    if (sharedActivity) {
+      searchQuery = sharedActivity;
+      searchInput.value = sharedActivity;
+    }
   }
 
   // Function to set day filter
@@ -355,7 +363,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (platform === "whatsapp") {
         window.open(
           `https://wa.me/?text=${encodeURIComponent(combinedShareText)}`,
-          "_blank"
+          "_blank",
+          "noopener,noreferrer"
         );
         return;
       }
@@ -365,7 +374,8 @@ document.addEventListener("DOMContentLoaded", () => {
           `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
             shareUrl
           )}`,
-          "_blank"
+          "_blank",
+          "noopener,noreferrer"
         );
       }
     } catch (error) {
@@ -641,13 +651,13 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="social-share-actions">
         <span class="share-label">Share:</span>
-        <button type="button" class="share-button" data-platform="native" data-activity="${name}">
+        <button type="button" class="share-button" data-platform="native" data-activity="${name}" aria-label="Share ${name}">
           Share
         </button>
-        <button type="button" class="share-button" data-platform="whatsapp" data-activity="${name}">
+        <button type="button" class="share-button" data-platform="whatsapp" data-activity="${name}" aria-label="Share ${name} on WhatsApp">
           WhatsApp
         </button>
-        <button type="button" class="share-button" data-platform="facebook" data-activity="${name}">
+        <button type="button" class="share-button" data-platform="facebook" data-activity="${name}" aria-label="Share ${name} on Facebook">
           Facebook
         </button>
       </div>
