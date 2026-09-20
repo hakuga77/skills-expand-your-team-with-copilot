@@ -83,9 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function setTheme(isDarkMode) {
+  function setTheme(isDarkMode, persistPreference = true) {
     document.body.classList.toggle("dark-mode", isDarkMode);
-    storeTheme(isDarkMode ? "dark" : "light");
+    if (persistPreference) {
+      storeTheme(isDarkMode ? "dark" : "light");
+    }
     updateThemeToggleButton(isDarkMode);
   }
 
@@ -102,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedTheme === "dark" || savedTheme === "light") {
       setTheme(savedTheme === "dark");
     } else {
-      setTheme(prefersDarkMode);
+      setTheme(prefersDarkMode, false);
     }
   }
 
