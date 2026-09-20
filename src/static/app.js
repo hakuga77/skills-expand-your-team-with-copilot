@@ -325,8 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-    document.execCommand("copy");
+    const copied = document.execCommand("copy");
     document.body.removeChild(textArea);
+    if (!copied) {
+      throw new Error("Copy command failed");
+    }
   }
 
   async function shareActivity(platform, name, formattedSchedule) {
@@ -638,13 +641,13 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="social-share-actions">
         <span class="share-label">Share:</span>
-        <button class="share-button" data-platform="native" data-activity="${name}">
+        <button type="button" class="share-button" data-platform="native" data-activity="${name}">
           Share
         </button>
-        <button class="share-button" data-platform="whatsapp" data-activity="${name}">
+        <button type="button" class="share-button" data-platform="whatsapp" data-activity="${name}">
           WhatsApp
         </button>
-        <button class="share-button" data-platform="facebook" data-activity="${name}">
+        <button type="button" class="share-button" data-platform="facebook" data-activity="${name}">
           Facebook
         </button>
       </div>
