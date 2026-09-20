@@ -64,6 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeTimeFilter) {
       currentTimeRange = activeTimeFilter.dataset.time;
     }
+
+    const sharedActivity = new URLSearchParams(window.location.search).get(
+      "activity"
+    );
+    const normalizedSharedActivity = sharedActivity ? sharedActivity.trim() : "";
+    if (normalizedSharedActivity && !searchInput.value.trim()) {
+      searchQuery = normalizedSharedActivity;
+      searchInput.value = normalizedSharedActivity;
+    }
   }
 
   // Function to set day filter
@@ -302,6 +311,79 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fallback to the string format if schedule_details isn't available
     return details.schedule;
+  }
+
+  function buildShareInfo(name, formattedSchedule) {
+    const normalizedName = name.trim();
+    const shareUrlObject = new URL(window.location.href);
+    shareUrlObject.searchParams.set("activity", normalizedName);
+    const shareUrl = shareUrlObject.toString();
+    const shareText = `Check out ${name} at Mergington High School! Schedule: ${formattedSchedule}`;
+    return { shareUrl, shareText };
+  }
+
+  async function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const copied = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    if (!copied) {
+      throw new Error("Copy command failed");
+    }
+  }
+
+  async function shareActivity(platform, name, formattedSchedule) {
+    const { shareUrl, shareText } = buildShareInfo(name, formattedSchedule);
+    const combinedShareText = `${shareText} ${shareUrl}`;
+
+    try {
+      if (platform === "native") {
+        if (navigator.share) {
+          await navigator.share({
+            title: "Mergington High School Activities",
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        }
+
+        await copyTextToClipboard(combinedShareText);
+        showMessage("Share details copied to your clipboard.", "success");
+        return;
+      }
+
+      if (platform === "whatsapp") {
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(combinedShareText)}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+        return;
+      }
+
+      if (platform === "facebook") {
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+            shareUrl
+          )}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    } catch (error) {
+      showMessage("Unable to share this activity right now.", "error");
+      console.error("Error sharing activity:", error);
+    }
   }
 
   // Function to determine activity type (this would ideally come from backend)
@@ -569,6 +651,9 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="social-share-actions" data-share-controls>
+        <span class="share-label">Share:</span>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -586,6 +671,34 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    const shareControls = activityCard.querySelector("[data-share-controls]");
+    const shareOptions = [
+      { platform: "native", label: "Share", ariaLabel: `Share ${name}` },
+      {
+        platform: "whatsapp",
+        label: "WhatsApp",
+        ariaLabel: `Share ${name} on WhatsApp`,
+      },
+      {
+        platform: "facebook",
+        label: "Facebook Link",
+        ariaLabel: `Share a link to ${name} on Facebook`,
+      },
+    ];
+
+    shareOptions.forEach(({ platform, label, ariaLabel }) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "share-button";
+      button.dataset.platform = platform;
+      button.setAttribute("aria-label", ariaLabel);
+      button.textContent = label;
+      button.addEventListener("click", async () => {
+        await shareActivity(platform, name, formattedSchedule);
+      });
+      shareControls.appendChild(button);
+    });
 
     activitiesList.appendChild(activityCard);
   }
