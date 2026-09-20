@@ -64,8 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateThemeToggleButton(isDarkMode) {
+    if (!themeToggleButton) {
+      return;
+    }
+
     const themeIcon = themeToggleButton.querySelector(".theme-icon");
     const themeText = themeToggleButton.querySelector(".theme-text");
+    themeToggleButton.setAttribute("aria-pressed", String(isDarkMode));
 
     if (isDarkMode) {
       themeIcon.textContent = "☀️";
@@ -85,6 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function initializeTheme() {
+    if (!themeToggleButton) {
+      return;
+    }
+
     const savedTheme = getStoredTheme();
     const prefersDarkMode =
       window.matchMedia &&
@@ -291,10 +300,12 @@ document.addEventListener("DOMContentLoaded", () => {
   loginButton.addEventListener("click", openLoginModal);
   logoutButton.addEventListener("click", logout);
   closeLoginModal.addEventListener("click", closeLoginModalHandler);
-  themeToggleButton.addEventListener("click", () => {
-    const isDarkMode = document.body.classList.contains("dark-mode");
-    setTheme(!isDarkMode);
-  });
+  if (themeToggleButton) {
+    themeToggleButton.addEventListener("click", () => {
+      const isDarkMode = document.body.classList.contains("dark-mode");
+      setTheme(!isDarkMode);
+    });
+  }
 
   // Close login modal when clicking outside
   window.addEventListener("click", (event) => {
