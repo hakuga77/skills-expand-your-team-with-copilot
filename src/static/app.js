@@ -680,8 +680,8 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         platform: "facebook",
-        label: "Facebook",
-        ariaLabel: `Share ${name} on Facebook`,
+        label: "Facebook Link",
+        ariaLabel: `Share a link to ${name} on Facebook`,
       },
     ];
 
