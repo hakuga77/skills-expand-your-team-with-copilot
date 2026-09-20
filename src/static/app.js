@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
-  let currentDifficulty = "none";
+  let currentDifficulty = "all";
 
   // Authentication state
   let currentUser = null;
@@ -460,7 +460,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Apply difficulty filter
       const difficultyLevel = getActivityDifficulty(details);
-      if (currentDifficulty === "none") {
+      if (currentDifficulty === "all") {
+        // "All Activities" does not apply a difficulty filter
+      } else if (currentDifficulty === "none") {
         // "No Level" means activities with no difficulty level specified
         if (difficultyLevel) {
           return;
