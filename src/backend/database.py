@@ -122,13 +122,13 @@ initial_activities = {
     },
     "Manga Club": {
         "description": "Dive into the dramatic worlds of Japanese manga (graphic novels), from bold heroes and clever rivals to unforgettable adventures",
-        "schedule": "Tuesdays, 7:00 PM - 8:00 PM",
+        "schedule": "Tuesdays, 5:00 PM - 6:00 PM",
         "schedule_details": {
             "days": ["Tuesday"],
-            "start_time": "19:00",
-            "end_time": "20:00"
+            "start_time": "17:00",
+            "end_time": "18:00"
         },
-        "max_participants": 15,
+        "max_participants": 25,
         "participants": []
     },
     "Debate Team": {
