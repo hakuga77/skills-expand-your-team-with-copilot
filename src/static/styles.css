@@ -50,6 +50,28 @@ body {
   font-size: 0.9rem;
 }
 
+body.dark-mode {
+  --primary: #90caf9;
+  --primary-light: #64b5f6;
+  --primary-dark: #42a5f5;
+  --primary-text: #0f172a;
+  --secondary: #ffb74d;
+  --secondary-light: #ffcc80;
+  --secondary-dark: #fb8c00;
+  --secondary-text: #111827;
+  --background: #111827;
+  --surface: #1f2937;
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --border: #374151;
+  --border-light: #4b5563;
+  --border-focus: #9ca3af;
+  --success-light: #173b21;
+  --warning-light: #402d12;
+  --error-light: #401616;
+  --info-light: #12303a;
+}
+
 header {
   text-align: center;
   padding: 12px 0;
@@ -617,6 +639,9 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 #user-status {

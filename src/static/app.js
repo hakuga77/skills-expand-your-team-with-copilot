@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const themeToggleButton = document.getElementById("theme-toggle");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -43,6 +44,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+
+  function updateThemeToggleButton(isDarkMode) {
+    const themeIcon = themeToggleButton.querySelector(".theme-icon");
+    const themeText = themeToggleButton.querySelector(".theme-text");
+
+    if (isDarkMode) {
+      themeIcon.textContent = "☀️";
+      themeText.textContent = "Light Mode";
+      themeToggleButton.setAttribute("aria-label", "Switch to light mode");
+    } else {
+      themeIcon.textContent = "🌙";
+      themeText.textContent = "Dark Mode";
+      themeToggleButton.setAttribute("aria-label", "Switch to dark mode");
+    }
+  }
+
+  function setTheme(isDarkMode) {
+    document.body.classList.toggle("dark-mode", isDarkMode);
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+    updateThemeToggleButton(isDarkMode);
+  }
+
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem("theme");
+    setTheme(savedTheme === "dark");
+  }
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -238,6 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
   loginButton.addEventListener("click", openLoginModal);
   logoutButton.addEventListener("click", logout);
   closeLoginModal.addEventListener("click", closeLoginModalHandler);
+  themeToggleButton.addEventListener("click", () => {
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    setTheme(!isDarkMode);
+  });
 
   // Close login modal when clicking outside
   window.addEventListener("click", (event) => {
@@ -862,6 +893,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Initialize app
+  initializeTheme();
   checkAuthentication();
   initializeFilters();
   fetchActivities();
